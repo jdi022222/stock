@@ -1,7 +1,5 @@
 package site.comibird.stock.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +15,10 @@ public class StockService {
 		this.stockRepository = stockRepository;
 	}
 
-	@Transactional
-	public void decrease(Long id, Long quantity) {
+	// @Transactional
+	public synchronized void decrease(Long id, Long quantity) {
 		Stock stock = stockRepository.findById(id).orElseThrow(() -> new RuntimeException("Stock not found"));
 		stock.decrease(quantity);
+		stockRepository.saveAndFlush(stock);
 	}
 }
